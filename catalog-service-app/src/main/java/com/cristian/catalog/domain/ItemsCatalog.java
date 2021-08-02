@@ -8,7 +8,7 @@ import java.util.Set;
 
 @Value
 @Builder
-public class ItemCatalog {
+public class ItemsCatalog {
 
     Set<Item> items;
     Map<String, String> filters;

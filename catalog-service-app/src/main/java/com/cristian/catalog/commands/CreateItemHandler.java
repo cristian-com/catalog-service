@@ -4,8 +4,10 @@ import com.cristian.catalog.domain.Item;
 import com.cristian.catalog.domain.ItemGateway;
 import lombok.AllArgsConstructor;
 
+import javax.enterprise.context.ApplicationScoped;
 import java.util.UUID;
 
+@ApplicationScoped
 @AllArgsConstructor
 public class CreateItemHandler implements CommandHandler<CreateItemCommand> {
 

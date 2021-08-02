@@ -1,0 +1,7 @@
+greeting:
+  message: "hello"
+
+quarkus:
+  mongodb:
+    connection-string: "mongodb://localhost:27017/"
+    database: "testdb"

@@ -1,16 +1,15 @@
 package com.cristian.catalog.queries;
 
+import com.cristian.catalog.domain.ItemsCatalog;
 import lombok.AllArgsConstructor;
 
-import javax.xml.catalog.Catalog;
-
 @AllArgsConstructor
-public class CatalogService implements ICatalogService {
+public class ItemsCatalogQueryHandler implements IItemsCatalogQueryHandler {
 
-    final QueryGateway<Catalog> gateway;
+    final QueryGateway<ItemsCatalog> gateway;
 
     @Override
-    public Catalog handle(ItemCatalogQuery query) {
+    public ItemsCatalog handle(ItemCatalogQuery query) {
         var quer = QueryBuilder.builder()
                 .filter("name", query.name())
                 .filter("category", query.category())
