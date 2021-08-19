@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 @Data
 public abstract class Entity<T extends Identifier> {
 
-    protected final T id;
+    protected final Identifier id;
     protected final Instant created;
     protected Instant version;
 

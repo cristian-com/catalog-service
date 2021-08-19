@@ -1,5 +1,7 @@
 package com.cristian.buildingblocks.domain;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.UUID;
@@ -7,19 +9,21 @@ import java.util.UUID;
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
 
+@Data
 public abstract class Event<B extends Serializable> {
 
     private final UUID id;
     private final B body;
     private final Instant timestamp;
-    private final OperationType
+    private final EventType eventType;
 
-    public Event(UUID id, B body, Instant timestamp) {
+    public Event(UUID id, B body, Instant timestamp, EventType eventType) {
         requireNonNull(body);
 
         this.id =  requireNonNullElse(id, UUID.randomUUID());
         this.body = body;
         this.timestamp = requireNonNullElse(timestamp, Instant.now());
+        this.eventType = eventType;
     }
 
     protected abstract String getType();
@@ -38,7 +42,7 @@ public abstract class Event<B extends Serializable> {
         return id.hashCode();
     }
 
-    private enum OperationType {
+    public enum EventType {
         CREATE, UPDATE, DELETE;
     }
 

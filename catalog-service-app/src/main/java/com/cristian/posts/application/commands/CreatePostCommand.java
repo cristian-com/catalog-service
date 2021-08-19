@@ -1,4 +1,4 @@
-package com.cristian.posts.commands;
+package com.cristian.posts.application.commands;
 
 import com.cristian.buildingblocks.application.commands.Command;
 

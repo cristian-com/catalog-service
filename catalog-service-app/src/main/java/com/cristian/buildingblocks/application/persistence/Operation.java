@@ -1,6 +1,5 @@
 package com.cristian.buildingblocks.application.persistence;
 
-import com.cristian.buildingblocks.domain.Entity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -11,18 +10,18 @@ import static com.cristian.buildingblocks.application.persistence.OperationType.
 import static com.cristian.buildingblocks.application.persistence.OperationType.UPDATE;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public record Operation(Entity<?> entity, OperationType type, Instant time) {
+public record Operation(String event, OperationType type, Instant time) {
 
-    public static Operation create(Entity<?> entity, Instant time) {
-        return new Operation(entity, CREATE, time);
+    public static Operation create(String event, Instant time) {
+        return new Operation(event, CREATE, time);
     }
 
-    public static Operation update(Entity<?> entity, Instant time) {
-        return new Operation(entity, UPDATE, time);
+    public static Operation update(String event, Instant time) {
+        return new Operation(event, UPDATE, time);
     }
 
-    public static Operation delete(Entity<?> entity, Instant time) {
-        return new Operation(entity, DELETE, time);
+    public static Operation delete(String event, Instant time) {
+        return new Operation(event, DELETE, time);
     }
 
 }

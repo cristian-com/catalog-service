@@ -12,14 +12,14 @@ import static java.util.Objects.isNull;
 
 public abstract class Aggregate<T extends Identifier> extends Entity<T> {
 
-    protected final Map<Entity<?>, Set<Event>> domainEvents;
+    protected final Map<Entity<?>, Set<Event<?>>> domainEvents;
 
     protected Aggregate(T id, Instant created, Instant version) {
         super(id, created, version);
         this.domainEvents = new ConcurrentHashMap<>();
     }
 
-    public Map<Entity<?>, Set<Event>> getDomainEvents() {
+    public Map<Entity<?>, Set<Event<?>>> getDomainEvents() {
         return Collections.unmodifiableMap(domainEvents);
     }
 
@@ -27,8 +27,8 @@ public abstract class Aggregate<T extends Identifier> extends Entity<T> {
         domainEvents.clear();
     }
 
-    protected void pushEvent(Entity<?> entity, Event event) {
-        var newCollection = new ConcurrentHashSet<Event>(3);
+    protected void pushEvent(Entity<?> entity, Event<?> event) {
+        var newCollection = new ConcurrentHashSet<Event<?>>(3);
         var entityEvents = domainEvents.putIfAbsent(entity, newCollection);
 
         if (isNull(entityEvents)) {

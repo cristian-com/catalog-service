@@ -1,7 +1,7 @@
-package com.cristian.posts.web.v1;
+package com.cristian.posts.infrastructure.web.v1;
 
 import com.cristian.buildingblocks.infrastructure.web.Resource;
-import com.cristian.posts.commands.CreatePostHandler;
+import com.cristian.posts.application.commands.CreatePostHandler;
 import lombok.RequiredArgsConstructor;
 
 import javax.ws.rs.POST;
@@ -17,8 +17,8 @@ public class PostResource implements Resource {
 
     @POST
     public Response post(WebRequestMapper.Post request) {
-        var response = handler.handle(requestMapper.map(request));
-        return created(response);
+        var result = handler.handle(requestMapper.map(request));
+        return created(result.getResponse().getId().toString());
     }
 
 }
