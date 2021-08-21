@@ -14,6 +14,10 @@ public abstract class Aggregate<T extends Identifier> extends Entity<T> {
 
     protected final Map<Entity<?>, Set<Event<?>>> domainEvents;
 
+    private Aggregate() {
+        throw new IllegalStateException("Illegal instantiation.");
+    }
+
     protected Aggregate(T id, Instant created, Instant version) {
         super(id, created, version);
         this.domainEvents = new ConcurrentHashMap<>();
@@ -25,6 +29,10 @@ public abstract class Aggregate<T extends Identifier> extends Entity<T> {
 
     public void flush() {
         domainEvents.clear();
+    }
+
+    protected void pushEvent(Event<?> event) {
+        pushEvent(this, event);
     }
 
     protected void pushEvent(Entity<?> entity, Event<?> event) {

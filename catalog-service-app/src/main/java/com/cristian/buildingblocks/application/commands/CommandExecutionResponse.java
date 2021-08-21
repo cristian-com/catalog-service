@@ -26,6 +26,12 @@ public class CommandExecutionResponse<T extends Aggregate<?>> {
         this.log = requireNonNullElse(log, Collections.emptyList());
     }
 
+    public static <T extends Aggregate<?>> CommandExecutionResponse<T> failed(List<Error> errors) {
+        return response((T) null, Status.FAILED)
+                .errors(errors)
+                .build();
+    }
+
     public static <T extends Aggregate<?>> CommandExecutionResponse<T> failed(T response, List<Error> errors) {
         return response(response, Status.FAILED)
                 .errors(errors)

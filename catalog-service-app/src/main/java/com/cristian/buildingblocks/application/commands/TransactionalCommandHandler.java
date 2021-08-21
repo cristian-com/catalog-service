@@ -7,10 +7,12 @@ import com.cristian.buildingblocks.domain.Event;
 import com.cristian.buildingblocks.domain.Identifier;
 import lombok.RequiredArgsConstructor;
 
+import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Singleton
 @RequiredArgsConstructor
 public class TransactionalCommandHandler<T extends Command,
         R extends Aggregate<? extends Identifier>> implements CommandHandler<T, R> {
@@ -20,15 +22,20 @@ public class TransactionalCommandHandler<T extends Command,
     public CommandExecutionResponse<R> handle(T command) {
         var unitOfWork = UnitOfWork.instance();
 
-        CommandExecutionResponse<R> result = handler.handle(command);
+        try {
+            CommandExecutionResponse<R> result = handler.handle(command);
 
-        unitOfWork.add(getUnitsOfWork(result.getResponse()));
+            unitOfWork.add(getUnitsOfWork(result.getResponse()));
 
-        if (unitOfWork.commit()) {
-            result.getResponse().flush();
+            if (unitOfWork.commit()) {
+                result.getResponse().flush();
+            }
+
+            return result;
+        } catch (Exception exception) {
+            unitOfWork.rollback();
+            return CommandExecutionResponse.failed(Error.of(exception).toList());
         }
-
-        return result;
     }
 
     private Map<Event<?>, Operation> getUnitsOfWork(R response) {
@@ -42,7 +49,7 @@ public class TransactionalCommandHandler<T extends Command,
         var eventType = event.getEventType();
 
         return switch (eventType) {
-            case CREATE -> Operation.create(event.getBody().toString(), event.getTimestamp());
+            case CREATED -> Operation.create(event.getBody().toString(), event.getTimestamp());
             case UPDATE -> Operation.update(event.getBody().toString(), event.getTimestamp());
             case DELETE -> Operation.delete(event.getBody().toString(), event.getTimestamp());
         };

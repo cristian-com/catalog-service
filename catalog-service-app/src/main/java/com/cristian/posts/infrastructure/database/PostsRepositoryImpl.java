@@ -11,13 +11,13 @@ import javax.inject.Singleton;
 @AllArgsConstructor
 public class PostsRepositoryImpl implements PostsRepository {
 
-    private final PostDocumentMapper mapper;
+    private final PostMapper mapper;
 
     @Override
     public Post save(Post post) {
-        PostEntity document = mapper.domainEntity(post);
-        document.persist();
-        return mapper.entity(document);
+        PostEntity entity = mapper.post(post);
+        entity.persist();
+        return mapper.post(entity);
     }
 
 }

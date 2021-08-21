@@ -1,8 +1,8 @@
 package com.cristian.posts.domain.entities;
 
 import com.cristian.buildingblocks.domain.Aggregate;
-import com.cristian.buildingblocks.domain.Entity;
 import com.cristian.buildingblocks.domain.UuidIdentifier;
+import com.cristian.posts.domain.events.PostCreated;
 import com.cristian.posts.domain.valueobjects.Content;
 import com.cristian.posts.domain.valueobjects.Privacy;
 import com.cristian.posts.domain.valueobjects.Reactions;
@@ -23,6 +23,14 @@ public class Post extends Aggregate<UuidIdentifier> {
     private Content content;
     private Reactions reactions;
     private Tags tags;
+
+    @Builder(builderMethodName = "create")
+    public Post(UuidIdentifier id, Status status,
+                Privacy privacy, Content content, Tags tags) {
+        this(id, Instant.now(), null, status, privacy, content, tags);
+
+        pushEvent(PostCreated.of(this, "Example"));
+    }
 
     @Builder
     public Post(UuidIdentifier id, Instant created, Instant version, Status status,

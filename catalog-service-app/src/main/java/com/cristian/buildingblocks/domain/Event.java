@@ -10,7 +10,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
 
 @Data
-public abstract class Event<B extends Serializable> {
+public abstract class Event<B extends Serializable> implements ValueObject {
 
     private final UUID id;
     private final B body;
@@ -43,7 +43,7 @@ public abstract class Event<B extends Serializable> {
     }
 
     public enum EventType {
-        CREATE, UPDATE, DELETE;
+        CREATED, UPDATE, DELETE;
     }
 
 }
