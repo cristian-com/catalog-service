@@ -1,5 +1,6 @@
 package com.cristian.posts.domain.entities;
 
+import com.cristian.buildingblocks.application.configuration.Default;
 import com.cristian.buildingblocks.domain.Aggregate;
 import com.cristian.buildingblocks.domain.UuidIdentifier;
 import com.cristian.posts.domain.events.PostCreated;
@@ -32,6 +33,7 @@ public class Post extends Aggregate<UuidIdentifier> {
         pushEvent(PostCreated.of(this, "Example"));
     }
 
+    @Default
     @Builder
     public Post(UuidIdentifier id, Instant created, Instant version, Status status,
                 Privacy privacy, Content content, Tags tags) {

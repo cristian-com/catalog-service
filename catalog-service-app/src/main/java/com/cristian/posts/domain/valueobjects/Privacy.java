@@ -1,7 +1,8 @@
 package com.cristian.posts.domain.valueobjects;
 
 import com.cristian.buildingblocks.domain.ValueObject;
-import jakarta.validation.constraints.NotNull;
+
+import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.requireNonNull;
 
@@ -12,7 +13,7 @@ public record Privacy(PrivacyValue value) implements ValueObject {
         return new Privacy(PrivacyValue.valueOf(string));
     }
 
-    enum PrivacyValue {
+    public enum PrivacyValue {
         PRIVATE, PUBLIC, SCOPED
     }
 }

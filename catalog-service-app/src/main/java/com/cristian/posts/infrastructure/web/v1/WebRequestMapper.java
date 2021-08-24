@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import java.util.Set;
 
 @Mapper
-interface WebRequestMapper {
+public interface WebRequestMapper {
 
     CreatePostCommand map(Post request);
 

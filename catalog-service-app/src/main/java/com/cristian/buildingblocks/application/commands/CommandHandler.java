@@ -5,6 +5,6 @@ import com.cristian.buildingblocks.domain.Identifier;
 
 public interface CommandHandler<T extends Command, R extends Aggregate<? extends Identifier>> {
 
-    CommandExecutionResponse<R> handle(T command);
+    CommandExecutionResponse<R> handle(final T command);
 
 }

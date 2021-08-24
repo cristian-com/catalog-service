@@ -64,7 +64,7 @@ public class UnitOfWork {
         return new ChangeEntry(entity.getTimestamp(), entity);
     }
 
-    public boolean commit() {
+    public boolean complete() {
         log.info("Unit of work committed;");
         try {
             transaction.commit();
@@ -76,7 +76,7 @@ public class UnitOfWork {
         }
     }
 
-    public void rollback() {
+    public void undo() {
         log.debug("Transaction rolled back!");
         try {
             transaction.rollback();
