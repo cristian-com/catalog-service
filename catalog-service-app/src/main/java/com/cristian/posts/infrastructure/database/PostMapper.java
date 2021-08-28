@@ -11,6 +11,7 @@ import com.cristian.posts.domain.valueobjects.Privacy;
 import com.cristian.posts.domain.valueobjects.Reaction;
 import com.cristian.posts.domain.valueobjects.Reactions;
 import com.cristian.posts.domain.valueobjects.Status;
+import com.cristian.posts.domain.valueobjects.StatusValue;
 import com.cristian.posts.domain.valueobjects.Tag;
 import com.cristian.posts.domain.valueobjects.Tags;
 import org.mapstruct.InheritInverseConfiguration;
@@ -57,7 +58,7 @@ public interface PostMapper {
             return null;
         }
 
-        return Tags.empty();
+        return null;
     }
 
     default String tags(Tags tags) {
@@ -73,7 +74,7 @@ public interface PostMapper {
             return null;
         }
 
-        return new Tag("Example");
+        return null;
     }
 
     default String reaction(Reaction reaction) {
@@ -89,7 +90,7 @@ public interface PostMapper {
             return null;
         }
 
-        return new Reaction(UuidIdentifier.random(), Instant.now());
+        return null;
     }
 
 
@@ -106,7 +107,7 @@ public interface PostMapper {
             return null;
         }
 
-        return Reactions.empty();
+        return null;
     }
     default Long id(Identifier id) {
         if (isNull(id)) {
@@ -133,5 +134,13 @@ public interface PostMapper {
 
     @InheritInverseConfiguration
     Status status(StatusEntity status);
+
+    default StatusValue status(String value) {
+        return StatusValue.ACTIVE;
+    }
+
+    default String status(StatusValue value) {
+        return value.toString();
+    }
 
 }

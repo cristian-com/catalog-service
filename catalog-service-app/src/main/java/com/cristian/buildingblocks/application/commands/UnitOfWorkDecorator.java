@@ -7,29 +7,24 @@ import com.cristian.buildingblocks.domain.Event;
 import com.cristian.buildingblocks.domain.Identifier;
 import lombok.RequiredArgsConstructor;
 
-import javax.decorator.Decorator;
-import javax.decorator.Delegate;
-import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Decorator
-@Dependent
 @RequiredArgsConstructor
-public class CommandHandlerUnitOfWorkDecorator<T extends Command,
+public class UnitOfWorkDecorator<T extends Command,
         R extends Aggregate<? extends Identifier>> implements CommandHandler<T, R> {
 
-    @Inject
-    @Delegate
-    CommandHandler<T, R> delegate;
+    public final CommandHandler<T, R> delegate;
+    private final UnitOfWork unitOfWork;
 
     public CommandExecutionResponse<R> handle(T command) {
-        var unitOfWork = UnitOfWork.instance();
-
         try {
+            if (!unitOfWork.begin()) {
+                return CommandExecutionResponse.failed(
+                        Error.application("Unit of work couldn't be initialised.").toList());
+            }
+
             CommandExecutionResponse<R> result = delegate.handle(command);
 
             unitOfWork.add(getUnitsOfWork(result.getResponse()));
@@ -40,6 +35,7 @@ public class CommandHandlerUnitOfWorkDecorator<T extends Command,
 
             return result;
         } catch (Exception exception) {
+            exception.printStackTrace();
             unitOfWork.undo();
             return CommandExecutionResponse.failed(Error.of(exception).toList());
         }

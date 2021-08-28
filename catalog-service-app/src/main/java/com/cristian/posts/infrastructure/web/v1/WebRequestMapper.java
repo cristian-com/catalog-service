@@ -1,7 +1,6 @@
 package com.cristian.posts.infrastructure.web.v1;
 
 import com.cristian.posts.application.commands.CreatePostCommand;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
 import java.util.Set;

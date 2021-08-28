@@ -2,13 +2,10 @@ package com.cristian.buildingblocks.application.persistence;
 
 import com.cristian.buildingblocks.domain.Event;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
+import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.UserTransaction;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -18,30 +15,26 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
+@ApplicationScoped
+@RequiredArgsConstructor
 public class UnitOfWork {
 
     private UUID id;
-    private LinkedHashMap<ChangeEntry, Operation> changes;
-    private UserTransaction transaction;
+    private LinkedHashMap<ChangeEntry, Operation> changes = new LinkedHashMap<>();
 
-    private UnitOfWork() {
-    }
+    private final UserTransaction transaction;
 
-    public static UnitOfWork instance() {
-        return new UnitOfWork();
-    }
-
-    public UnitOfWork begin() {
-        log.info("Starting unit of work ");
+    public boolean begin() {
+        log.debug("Starting transaction.");
         this.id = UUID.randomUUID();
 
         try {
             transaction.begin();
-        } catch (NotSupportedException | SystemException e) {
-            e.printStackTrace();
+            return true;
+        } catch (Exception e) {
+            log.error("There was an exception starting the transaction.", e);
+            return false;
         }
-
-        return this;
     }
 
     public UnitOfWork add(Map<Event<?>, Operation> operations) {
@@ -65,23 +58,22 @@ public class UnitOfWork {
     }
 
     public boolean complete() {
-        log.info("Unit of work committed;");
         try {
             transaction.commit();
+            log.debug("Transaction committed.");
             return true;
-        } catch (RollbackException | HeuristicMixedException
-                | HeuristicRollbackException | SystemException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.debug("Transaction couldn't be committed.", e);
             return false;
         }
     }
 
     public void undo() {
-        log.debug("Transaction rolled back!");
         try {
             transaction.rollback();
-        } catch (SystemException e) {
-            e.printStackTrace();
+            log.debug("Transaction rolled back!");
+        } catch (Exception e) {
+            log.error("There was an error committing the transaction.", e);
         }
     }
 

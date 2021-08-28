@@ -9,6 +9,10 @@ public record Error(String message, ErrorType errorType) {
         return Collections.singletonList(this);
     }
 
+    public static Error application(String message) {
+        return new Error(message, ErrorType.APPLICATION);
+    }
+
     public static Error of(Exception exception) {
         return new Error(exception.getMessage(), ErrorType.APPLICATION);
     }

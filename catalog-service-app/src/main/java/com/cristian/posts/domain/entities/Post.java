@@ -26,9 +26,8 @@ public class Post extends Aggregate<UuidIdentifier> {
     private Tags tags;
 
     @Builder(builderMethodName = "create")
-    public Post(UuidIdentifier id, Status status,
-                Privacy privacy, Content content, Tags tags) {
-        this(id, Instant.now(), null, status, privacy, content, tags);
+    public Post(UuidIdentifier id, Privacy privacy, Content content, Tags tags) {
+        this(id, null, null, Status.active(), privacy, content, tags);
 
         pushEvent(PostCreated.of(this, "Example"));
     }

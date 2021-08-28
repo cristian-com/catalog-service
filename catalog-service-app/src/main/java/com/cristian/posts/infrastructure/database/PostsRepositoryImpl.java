@@ -16,8 +16,12 @@ public class PostsRepositoryImpl implements PostsRepository {
     @Override
     public Post save(Post post) {
         PostEntity entity = mapper.post(post);
+        entity.id = null;
+        entity.privacy = null;
+        entity.status = null;
         entity.persist();
-        return mapper.post(entity);
+
+        return post;
     }
 
 }
