@@ -9,7 +9,7 @@ import lombok.Data;
 import java.time.Instant;
 
 @Data
-public class Comment extends Entity<UuidIdentifier> {
+public class Comment extends Entity {
 
     private final Content content;
     private final Reactions reactions;

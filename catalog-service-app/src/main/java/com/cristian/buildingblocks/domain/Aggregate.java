@@ -10,20 +10,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.isNull;
 
-public abstract class Aggregate<T extends Identifier> extends Entity<T> {
+public abstract class Aggregate extends Entity {
 
-    protected final Map<Entity<?>, Set<Event<?>>> domainEvents;
+    protected final Map<Entity, Set<Event<?>>> domainEvents;
 
     private Aggregate() {
         throw new IllegalStateException("Illegal instantiation.");
     }
 
-    protected Aggregate(T id, Instant created, Instant version) {
+    protected Aggregate(Identifier id, Instant created, Instant version) {
         super(id, created, version);
         this.domainEvents = new ConcurrentHashMap<>();
     }
 
-    public Map<Entity<?>, Set<Event<?>>> getDomainEvents() {
+    public Map<Entity, Set<Event<?>>> getDomainEvents() {
         return Collections.unmodifiableMap(domainEvents);
     }
 
@@ -35,7 +35,7 @@ public abstract class Aggregate<T extends Identifier> extends Entity<T> {
         pushEvent(this, event);
     }
 
-    protected void pushEvent(Entity<?> entity, Event<?> event) {
+    protected void pushEvent(Entity entity, Event<?> event) {
         var newCollection = new ConcurrentHashSet<Event<?>>(3);
         var entityEvents = domainEvents.putIfAbsent(entity, newCollection);
 

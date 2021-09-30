@@ -4,48 +4,48 @@ import com.cristian.buildingblocks.application.persistence.Operation;
 import com.cristian.buildingblocks.application.persistence.UnitOfWork;
 import com.cristian.buildingblocks.domain.Aggregate;
 import com.cristian.buildingblocks.domain.Event;
-import com.cristian.buildingblocks.domain.Identifier;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
-public class UnitOfWorkDecorator<T extends Command,
-        R extends Aggregate<? extends Identifier>> implements CommandHandler<T, R> {
+@ApplicationScoped
+@AllArgsConstructor
+public class UnitOfWorkDecorator {
 
-    public final CommandHandler<T, R> delegate;
-    private final UnitOfWork unitOfWork;
+    Instance<UnitOfWork> unitOfWork;
 
-    public CommandExecutionResponse<R> handle(T command) {
+    public <T extends Command, R extends Aggregate> CommandExecutionResponse<R> handle(
+            CommandHandler<T, R> delegate, T command) {
+        UnitOfWork uow = unitOfWork.get();
         try {
-            if (!unitOfWork.begin()) {
+            if (!uow.begin()) {
                 return CommandExecutionResponse.failed(
                         Error.application("Unit of work couldn't be initialised.").toList());
             }
 
             CommandExecutionResponse<R> result = delegate.handle(command);
 
-            unitOfWork.add(getUnitsOfWork(result.getResponse()));
+            Map<Event<?>, Operation> x = result.getResponse().getDomainEvents().values().stream()
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toMap(event -> event, this::getOperation));
 
-            if (unitOfWork.complete()) {
+            uow.add(x);
+
+            if (uow.complete()) {
                 result.getResponse().flush();
             }
 
             return result;
         } catch (Exception exception) {
             exception.printStackTrace();
-            unitOfWork.undo();
+            uow.undo();
             return CommandExecutionResponse.failed(Error.of(exception).toList());
         }
-    }
-
-    private Map<Event<?>, Operation> getUnitsOfWork(R response) {
-        var domainEvents = response.getDomainEvents();
-        return domainEvents.values().stream()
-                .flatMap(Collection::stream)
-                .collect(Collectors.toMap(event -> event, this::getOperation));
     }
 
     private Operation getOperation(Event<?> event) {

@@ -1,4 +1,4 @@
-package com.cristian.posts.application.interactors;
+package com.cristian.posts.application.services;
 
 import com.cristian.buildingblocks.application.commands.CommandHandler;
 import com.cristian.posts.application.commands.CreatePostCommand;

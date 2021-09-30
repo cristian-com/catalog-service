@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.transaction.UserTransaction;
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -15,12 +15,12 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
-@ApplicationScoped
+@RequestScoped
 @RequiredArgsConstructor
 public class UnitOfWork {
 
     private UUID id;
-    private LinkedHashMap<ChangeEntry, Operation> changes = new LinkedHashMap<>();
+    private LinkedHashMap<Task, Operation> tasks = new LinkedHashMap<>();
 
     private final UserTransaction transaction;
 
@@ -38,7 +38,7 @@ public class UnitOfWork {
     }
 
     public UnitOfWork add(Map<Event<?>, Operation> operations) {
-        Map<ChangeEntry, Operation> newEntries = operations.entrySet().stream()
+        Map<Task, Operation> newEntries = operations.entrySet().stream()
                 .collect(Collectors.toMap(operationEntry -> getOperationEntry(operationEntry.getKey()),
                         Map.Entry::getValue,
                         (conflictedEntityOperation1, conflictedEntityOperation2) ->
@@ -48,13 +48,13 @@ public class UnitOfWork {
                         }
                 ));
 
-        this.changes.putAll(newEntries);
+        this.tasks.putAll(newEntries);
 
         return this;
     }
 
-    private ChangeEntry getOperationEntry(Event<?> entity) {
-        return new ChangeEntry(entity.getTimestamp(), entity);
+    private Task getOperationEntry(Event<?> entity) {
+        return new Task(entity.getTimestamp(), entity);
     }
 
     public boolean complete() {
@@ -77,7 +77,7 @@ public class UnitOfWork {
         }
     }
 
-    private record ChangeEntry(Instant time, Event<?> entity) {
+    private record Task(Instant time, Event<?> entity) {
     }
 
 }

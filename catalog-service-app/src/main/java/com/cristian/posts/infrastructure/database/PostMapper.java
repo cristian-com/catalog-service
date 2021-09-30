@@ -2,9 +2,9 @@ package com.cristian.posts.infrastructure.database;
 
 import com.cristian.buildingblocks.domain.Identifier;
 import com.cristian.buildingblocks.domain.UuidIdentifier;
-import com.cristian.external.database.PostEntity;
-import com.cristian.external.database.PrivacyEntity;
-import com.cristian.external.database.StatusEntity;
+import com.cristian.posts.infrastructure.database.entities.PostEntity;
+import com.cristian.posts.infrastructure.database.entities.PrivacyEntity;
+import com.cristian.posts.infrastructure.database.entities.StatusEntity;
 import com.cristian.posts.domain.entities.Post;
 import com.cristian.posts.domain.valueobjects.Content;
 import com.cristian.posts.domain.valueobjects.Privacy;
@@ -16,8 +16,6 @@ import com.cristian.posts.domain.valueobjects.Tag;
 import com.cristian.posts.domain.valueobjects.Tags;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
-
-import java.time.Instant;
 
 import static java.util.Objects.isNull;
 

@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNullElse;
 
 @Data
 @Builder(access = AccessLevel.PRIVATE)
-public class CommandExecutionResponse<T extends Aggregate<?>> {
+public class CommandExecutionResponse<T extends Aggregate> {
 
     private final T response;
     private final Status status;
@@ -26,31 +26,31 @@ public class CommandExecutionResponse<T extends Aggregate<?>> {
         this.log = requireNonNullElse(log, Collections.emptyList());
     }
 
-    public static <T extends Aggregate<?>> CommandExecutionResponse<T> failed(List<Error> errors) {
+    public static <T extends Aggregate> CommandExecutionResponse<T> failed(List<Error> errors) {
         return response((T) null, Status.FAILED)
                 .errors(errors)
                 .build();
     }
 
-    public static <T extends Aggregate<?>> CommandExecutionResponse<T> failed(T response, List<Error> errors) {
+    public static <T extends Aggregate> CommandExecutionResponse<T> failed(T response, List<Error> errors) {
         return response(response, Status.FAILED)
                 .errors(errors)
                 .build();
     }
 
-    public static <T extends Aggregate<?>> CommandExecutionResponse<T> success(T response, List<Log> log) {
+    public static <T extends Aggregate> CommandExecutionResponse<T> success(T response, List<Log> log) {
         return response(response, Status.SUCCESS)
                 .log(log)
                 .build();
     }
 
-    public static <T extends Aggregate<?>> CommandExecutionResponse<T> success(T response) {
+    public static <T extends Aggregate> CommandExecutionResponse<T> success(T response) {
         return response(response, Status.SUCCESS)
                 .build();
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Aggregate<?>> CommandExecutionResponseBuilder<T> response(T response, Status status) {
+    private static <T extends Aggregate> CommandExecutionResponseBuilder<T> response(T response, Status status) {
 
         return (CommandExecutionResponseBuilder<T>) builder()
                 .response(response)

@@ -1,6 +1,6 @@
 package com.cristian.posts.infrastructure.database;
 
-import com.cristian.external.database.PostEntity;
+import com.cristian.posts.infrastructure.database.entities.PostEntity;
 import com.cristian.posts.domain.entities.Post;
 import com.cristian.posts.application.gateways.PostsRepository;
 import lombok.AllArgsConstructor;

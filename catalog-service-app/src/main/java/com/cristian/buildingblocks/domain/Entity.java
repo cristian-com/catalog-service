@@ -9,7 +9,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.requireNonNull;
 
 @Data
-public abstract class Entity<T extends Identifier> {
+public abstract class Entity {
 
     protected final Identifier id;
     protected final Instant created;
@@ -19,7 +19,7 @@ public abstract class Entity<T extends Identifier> {
         throw new IllegalStateException("");
     }
 
-    protected Entity(T id, Instant created, Instant version) {
+    protected Entity(Identifier id, Instant created, Instant version) {
         this.id = id;
 
         if (isNull(created)) {
@@ -41,7 +41,7 @@ public abstract class Entity<T extends Identifier> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Entity<?> entity = (Entity<?>) o;
+        Entity entity = (Entity) o;
         return id.equals(entity.id) && created.equals(entity.created) && version.equals(entity.version);
     }
 

@@ -17,7 +17,7 @@ import java.time.Instant;
 import static java.util.Objects.requireNonNull;
 
 @Data
-public class Post extends Aggregate<UuidIdentifier> {
+public class Post extends Aggregate {
 
     private Status status = Status.active();
     private Privacy privacy;

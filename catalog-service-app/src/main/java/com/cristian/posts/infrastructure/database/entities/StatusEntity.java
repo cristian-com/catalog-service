@@ -1,4 +1,4 @@
-package com.cristian.external.database;
+package com.cristian.posts.infrastructure.database.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
