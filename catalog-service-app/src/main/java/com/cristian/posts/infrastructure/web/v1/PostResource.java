@@ -1,10 +1,8 @@
 package com.cristian.posts.infrastructure.web.v1;
 
 import com.cristian.buildingblocks.application.commands.CommandExecutionResponse;
-import com.cristian.buildingblocks.application.commands.UnitOfWorkDecorator;
 import com.cristian.buildingblocks.infrastructure.web.Resource;
 import com.cristian.posts.application.commands.CreatePostCommand;
-import com.cristian.posts.application.services.CreatePostHandler;
 import com.cristian.posts.domain.entities.Post;
 import com.cristian.services.CommandProcessorService;
 import lombok.RequiredArgsConstructor;

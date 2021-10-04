@@ -1,11 +1,11 @@
 package com.cristian.services;
 
-import com.cristian.buildingblocks.application.commands.Command;
 import com.cristian.buildingblocks.application.commands.CommandExecutionResponse;
-import com.cristian.buildingblocks.domain.Aggregate;
+import com.cristian.posts.application.commands.CreatePostCommand;
+import com.cristian.posts.domain.entities.Post;
 
 public interface CommandProcessorService {
 
-    <C extends Command, R extends Aggregate> CommandExecutionResponse<R> process(C command);
+    CommandExecutionResponse<Post> process(CreatePostCommand command);
 
 }

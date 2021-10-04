@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UnitOfWorkDecorator {
 
-    Instance<UnitOfWork> unitOfWork;
+    private final Instance<UnitOfWork> unitOfWork;
 
     public <T extends Command, R extends Aggregate> CommandExecutionResponse<R> handle(
             CommandHandler<T, R> delegate, T command) {
